@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"] 
+      // or if your components are in the root folder
+      // "@/*": ["./*"] 
+    }
+  }
+}
