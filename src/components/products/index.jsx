@@ -1,18 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../layout/Header'
 import Footer from '../layout/Footer'
 import { Button } from '../ui/button';
+import { ProductCard } from '../home/Components/ProductCard';
 
 export default function Products() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [filteredAndSortedProducts, setFilteredAndSortedProducts] = useState([]);
+    const [categoriesAvailable, setCategoriesAvailable] = useState([]);
 
-    // Create Function Fetch all proucts
+    console.log("filteredAndSortedProducts", filteredAndSortedProducts)
 
+    const extractProductCategory = (products) => {
+        let abTakUniques = []
+        products?.map((product) => {
+            console.log("productproductproductproduct ", product)
+            console.log(abTakUniques.includes(product?.category))
+            if (abTakUniques.includes(product?.category)) {
+            } else {
+                abTakUniques.push(product?.category)
+            }
+        })
+        console.log("abTakUniques", abTakUniques)
+        setCategoriesAvailable(abTakUniques);
 
-    // use useEffect add the function for fetching products
+    }
 
-    //api data will be stored in setFilteredAndSortedProducts
+    const fetchProductData = () => {
+        fetch('https://fakestoreapi.com/products')
+            .then(response => response.json())
+            .then(data => {
+                setFilteredAndSortedProducts(data);
+                extractProductCategory(data)
+            });
+    }
+    useEffect(() => {
+        fetchProductData()
+    }, [])
     return (
         <div className='min-h-screen flex flex-col'>
             <Header />
@@ -28,6 +52,34 @@ export default function Products() {
                     </div>
 
                     {/* REMAINING FILTERS */}
+                    <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
+                        {/* Categories */}
+                        <div className="flex flex-wrap gap-2">
+                            {categoriesAvailable.map((category) => (
+                                <Button
+                                    key={category}
+                                    variant={selectedCategory === category ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => handleCategoryChange(category)}
+                                >
+                                    {category}
+                                </Button>
+                            ))}
+                        </div>
+
+                        {/* Sort */}
+                        {/* <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                            <SelectTrigger className="w-[160px]">
+                                <SelectValue placeholder="Sort by" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="featured">Featured</SelectItem>
+                                <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                                <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                                <SelectItem value="newest">Newest</SelectItem>
+                            </SelectContent>
+                        </Select> */}
+                    </div>
 
                     {/* PRODUCTS LISTING */}
                     {filteredAndSortedProducts.length > 0 ? (
