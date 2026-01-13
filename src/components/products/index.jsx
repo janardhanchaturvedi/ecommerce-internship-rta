@@ -40,12 +40,9 @@ export default function Products() {
         if (category111 == 'All') {
             setFilteredProducts(filteredAndSortedProducts)
         }
-
         const categoryFilteredProduct = filteredAndSortedProducts.filter((product) => {
-            console.log("category", product?.category, category111)
             return product?.category == category111
         })
-        // console.log("categoryFilteredProduct", categoryFilteredProduct)
         setFilteredProducts(categoryFilteredProduct)
     }
 
