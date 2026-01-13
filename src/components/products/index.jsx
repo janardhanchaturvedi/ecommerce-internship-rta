@@ -8,20 +8,20 @@ export default function Products() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [filteredAndSortedProducts, setFilteredAndSortedProducts] = useState([]);
     const [categoriesAvailable, setCategoriesAvailable] = useState([]);
+    const [fileteredProducts, setFilteredProducts] = useState(filteredAndSortedProducts);
 
-    console.log("filteredAndSortedProducts", filteredAndSortedProducts)
+    useEffect(() => {
+        fetchProductData()
+    }, [])
 
     const extractProductCategory = (products) => {
         let abTakUniques = []
         products?.map((product) => {
-            console.log("productproductproductproduct ", product)
-            console.log(abTakUniques.includes(product?.category))
             if (abTakUniques.includes(product?.category)) {
             } else {
                 abTakUniques.push(product?.category)
             }
         })
-        console.log("abTakUniques", abTakUniques)
         setCategoriesAvailable(abTakUniques);
 
     }
@@ -34,9 +34,21 @@ export default function Products() {
                 extractProductCategory(data)
             });
     }
-    useEffect(() => {
-        fetchProductData()
-    }, [])
+
+    const handleCategoryChange = (category111) => {
+        setSelectedCategory(category111)
+        if (category111 = 'All') {
+            setFilteredProducts(filteredAndSortedProducts)
+        }
+
+        const categoryFilteredProduct = filteredAndSortedProducts.filter((product) => {
+            console.log("category", product?.category, category111)
+            return product?.category == category111
+        })
+        // console.log("categoryFilteredProduct", categoryFilteredProduct)
+        setFilteredProducts(categoryFilteredProduct)
+    }
+
     return (
         <div className='min-h-screen flex flex-col'>
             <Header />
@@ -44,7 +56,7 @@ export default function Products() {
                 <div className='container-wide py-8 md:py-12'>
                     <div className="mb-8">
                         <h1 className="font-display text-3xl md:text-4xl font-medium">
-                            {selectedCategory === 'All' ? 'All Products' : selectedCategory}
+                            {selectedCategory === 'All' ? 'All Products' : selectedCategory.toUpperCase()}
                         </h1>
                         <p className="mt-2 text-muted-foreground">
                             {/* {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'product' : 'products'} */}
@@ -55,16 +67,18 @@ export default function Products() {
                     <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-border">
                         {/* Categories */}
                         <div className="flex flex-wrap gap-2">
-                            {categoriesAvailable.map((category) => (
-                                <Button
-                                    key={category}
-                                    variant={selectedCategory === category ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => handleCategoryChange(category)}
-                                >
-                                    {category}
-                                </Button>
-                            ))}
+                            {categoriesAvailable.map((category) => {
+                                return (
+                                    <Button
+                                        key={category}
+                                        variant={selectedCategory === category ? 'default' : 'outline'}
+                                        size="sm"
+                                        onClick={() => handleCategoryChange(category)}
+                                    >
+                                        {category}
+                                    </Button>
+                                )
+                            })}
                         </div>
 
                         {/* Sort */}
@@ -82,9 +96,9 @@ export default function Products() {
                     </div>
 
                     {/* PRODUCTS LISTING */}
-                    {filteredAndSortedProducts.length > 0 ? (
+                    {fileteredProducts.length > 0 ? (
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                            {filteredAndSortedProducts.map((product) => (
+                            {fileteredProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
