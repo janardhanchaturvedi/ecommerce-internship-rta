@@ -37,7 +37,7 @@ export default function Products() {
 
     const handleCategoryChange = (category111) => {
         setSelectedCategory(category111)
-        if (category111 = 'All') {
+        if (category111 == 'All') {
             setFilteredProducts(filteredAndSortedProducts)
         }
 
