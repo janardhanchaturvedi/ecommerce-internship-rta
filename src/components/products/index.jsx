@@ -3,12 +3,14 @@ import Header from '../layout/Header'
 import Footer from '../layout/Footer'
 import { Button } from '../ui/button';
 import { ProductCard } from '../home/Components/ProductCard';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 export default function Products() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [filteredAndSortedProducts, setFilteredAndSortedProducts] = useState([]);
-    const [categoriesAvailable, setCategoriesAvailable] = useState([]);
+    const [categoriesAvailable, setCategoriesAvailable] = useState(["All"]);
     const [fileteredProducts, setFilteredProducts] = useState(filteredAndSortedProducts);
+    const [sortBy, setSortBy] = useState("");
 
     useEffect(() => {
         fetchProductData()
@@ -22,7 +24,7 @@ export default function Products() {
                 abTakUniques.push(product?.category)
             }
         })
-        setCategoriesAvailable(abTakUniques);
+        setCategoriesAvailable([...categoriesAvailable, ...abTakUniques]);
 
     }
 
@@ -31,6 +33,7 @@ export default function Products() {
             .then(response => response.json())
             .then(data => {
                 setFilteredAndSortedProducts(data);
+                setFilteredProducts(data)
                 extractProductCategory(data)
             });
     }
@@ -39,11 +42,12 @@ export default function Products() {
         setSelectedCategory(category111)
         if (category111 == 'All') {
             setFilteredProducts(filteredAndSortedProducts)
+        } else {
+            const categoryFilteredProduct = filteredAndSortedProducts.filter((product) => {
+                return product?.category == category111
+            })
+            setFilteredProducts(categoryFilteredProduct)
         }
-        const categoryFilteredProduct = filteredAndSortedProducts.filter((product) => {
-            return product?.category == category111
-        })
-        setFilteredProducts(categoryFilteredProduct)
     }
 
     return (
@@ -56,7 +60,7 @@ export default function Products() {
                             {selectedCategory === 'All' ? 'All Products' : selectedCategory.toUpperCase()}
                         </h1>
                         <p className="mt-2 text-muted-foreground">
-                            {/* {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'product' : 'products'} */}
+                            {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'product' : 'products'}
                         </p>
                     </div>
 
@@ -79,17 +83,15 @@ export default function Products() {
                         </div>
 
                         {/* Sort */}
-                        {/* <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                        <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
                             <SelectTrigger className="w-[160px]">
                                 <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="featured">Featured</SelectItem>
                                 <SelectItem value="price-asc">Price: Low to High</SelectItem>
                                 <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                                <SelectItem value="newest">Newest</SelectItem>
                             </SelectContent>
-                        </Select> */}
+                        </Select>
                     </div>
 
                     {/* PRODUCTS LISTING */}
