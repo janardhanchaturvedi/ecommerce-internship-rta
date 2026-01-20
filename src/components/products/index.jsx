@@ -50,6 +50,19 @@ export default function Products() {
         }
     }
 
+    const handleSortingDropdownChange = (value) => {
+        setSortBy(value)
+        let sortedData
+        if (value == "price-asc") {
+            sortedData = filteredAndSortedProducts.sort((a, b) => a.price - b.price)
+        }
+
+        if (value === "price-desc") {
+            sortedData = filteredAndSortedProducts.sort((a, b) => b.price - a.price)
+        }
+        setFilteredProducts(sortedData)
+    }
+
     return (
         <div className='min-h-screen flex flex-col'>
             <Header />
@@ -83,7 +96,7 @@ export default function Products() {
                         </div>
 
                         {/* Sort */}
-                        <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
+                        <Select value={sortBy} onValueChange={handleSortingDropdownChange}>
                             <SelectTrigger className="w-[160px]">
                                 <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
