@@ -54,11 +54,11 @@ export default function Products() {
         setSortBy(value)
         let sortedData
         if (value == "price-asc") {
-            sortedData = filteredAndSortedProducts.sort((a, b) => a.price - b.price)
+            sortedData = fileteredProducts.sort((a, b) => a.price - b.price)
         }
 
         if (value === "price-desc") {
-            sortedData = filteredAndSortedProducts.sort((a, b) => b.price - a.price)
+            sortedData = fileteredProducts.sort((a, b) => b.price - a.price)
         }
         setFilteredProducts(sortedData)
     }
@@ -73,7 +73,7 @@ export default function Products() {
                             {selectedCategory === 'All' ? 'All Products' : selectedCategory.toUpperCase()}
                         </h1>
                         <p className="mt-2 text-muted-foreground">
-                            {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'product' : 'products'}
+                            {fileteredProducts.length} {fileteredProducts.length === 1 ? 'product' : 'products'}
                         </p>
                     </div>
 
