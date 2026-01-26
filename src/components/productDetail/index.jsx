@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
+import { UserContext } from './../../contexts/UserContext';
 
 
 const ProductDetailPage = () => {
     const { id } = useParams();
     const [productDetails, setProductDetails] = useState();
+    const user = useContext(UserContext);
+    console.log("user 1111", user)
     console.log("productDetails ", productDetails)
 
     const navigate = useNavigate();
