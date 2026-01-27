@@ -8,8 +8,9 @@ import Products from './components/products';
 import ProductDetailPage from './components/productDetail';
 import { UserContext } from './contexts/UserContext';
 import LoginPage from './components/login';
+import Signup from './components/signup';
 export default function App() {
-  const [user, setUser] = useState({ name: 'Jane Doe', age: 30 });
+  const [user, setUser] = useState(null);
   const router = createBrowserRouter([
     {
       path: "/",
@@ -26,6 +27,10 @@ export default function App() {
     {
       path: "/login",
       element: <LoginPage />
+    },
+    {
+      path: "/signup",
+      element: <Signup />
     }
   ]);
   return (

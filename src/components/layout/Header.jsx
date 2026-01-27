@@ -1,9 +1,15 @@
-import { Menu, ShoppingBag, X } from 'lucide-react'
-import React from 'react'
+import { LogOut, Menu, ShoppingBag, User, X } from 'lucide-react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
+import { UserContext } from '@/contexts/UserContext';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 export default function Header() {
+    const user = useContext(UserContext);
+    const logout = () => {
+
+    }
     return (
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
             <nav className="container-wide">
@@ -43,6 +49,34 @@ export default function Header() {
 
                     {/* Right side */}
                     <div className="flex items-center gap-4">
+                        {user ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" aria-label="User menu">
+                                        <User className="h-5 w-5" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                    <div className="px-2 py-1.5">
+                                        <p className="text-sm font-medium">{user.name}</p>
+                                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                                    </div>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem asChild>
+                                        <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive">
+                                        <LogOut className="h-4 w-4 mr-2" />
+                                        Sign out
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        ) : (
+                            <Button asChild variant="ghost" size="sm" className="hidden md:inline-flex">
+                                <Link to="/login">Sign in</Link>
+                            </Button>
+                        )}
                         <Button
                             variant="ghost"
                             size="icon"
