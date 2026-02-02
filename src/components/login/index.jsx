@@ -25,19 +25,26 @@ export default function Login() {
     const from = (location.state)?.from || '/dashboard';
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
+        // e.preventDefault();
+        // setError('');
+        // setIsLoading(true);
 
-        const result = await login(email, password);
+        // const result = await login(email, password);
 
-        if (result.success) {
-            navigate(from, { replace: true });
-        } else {
-            setError(result.error || 'Login failed');
+        // if (result.success) {
+        //     navigate(from, { replace: true });
+        // } else {
+        //     setError(result.error || 'Login failed');
+        // }
+
+        // setIsLoading(false);
+        const registrationKaEmail = localStorage.getItem("email");
+        const registrationKaPassword = localStorage.getItem("password")
+
+        if (registrationKaEmail === email && password === registrationKaPassword) {
+            navigate("/dashboard")
         }
 
-        setIsLoading(false);
     };
 
     return (

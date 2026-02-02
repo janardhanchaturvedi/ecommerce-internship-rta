@@ -32,25 +32,29 @@ export default function Signup() {
     const isPasswordValid = passwordRequirements.every(req => req.met);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+        // e.preventDefault();
+        // setError('');
 
-        if (!isPasswordValid) {
-            setError('Please meet all password requirements');
-            return;
-        }
+        // if (!isPasswordValid) {
+        //     setError('Please meet all password requirements');
+        //     return;
+        // }
 
-        setIsLoading(true);
+        // setIsLoading(true);
 
-        const result = await signup(email, password, name);
+        // const result = await signup(email, password, name);
 
-        if (result.success) {
-            navigate('/dashboard');
-        } else {
-            setError(result.error || 'Signup failed');
-        }
+        // if (result.success) {
+        //     navigate('/dashboard');
+        // } else {
+        //     setError(result.error || 'Signup failed');
+        // }
 
-        setIsLoading(false);
+        // setIsLoading(false);
+        localStorage.setItem("name", name)
+        localStorage.setItem("password", password)
+        localStorage.setItem("email", email)
+
     };
 
     return (
