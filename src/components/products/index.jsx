@@ -29,7 +29,7 @@ export default function Products() {
     }
 
     const fetchProductData = () => {
-        fetch('https://fakestoreapi.com/products')
+        fetch('http://localhost:3001/products')
             .then(response => response.json())
             .then(data => {
                 setFilteredAndSortedProducts(data);
