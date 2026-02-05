@@ -54,6 +54,21 @@ export default function Signup() {
         localStorage.setItem("name", name)
         localStorage.setItem("password", password)
         localStorage.setItem("email", email)
+        const data = {
+            fullName: name,
+            email,
+            password
+        }
+        const response = await fetch("http://localhost:3001/register", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+
+        })
+        console.log("response", response);
+
 
     };
 
