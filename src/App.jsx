@@ -9,6 +9,7 @@ import ProductDetailPage from './components/productDetail';
 import { UserContext } from './contexts/UserContext';
 import LoginPage from './components/login';
 import Signup from './components/signup';
+import AddProductPage from './components/addProduct';
 export default function App() {
   const [user, setUser] = useState(null);
   const router = createBrowserRouter([
@@ -31,6 +32,10 @@ export default function App() {
     {
       path: "/signup",
       element: <Signup />
+    },
+    {
+      path: "/add-product",
+      element: <AddProductPage />
     }
   ]);
   return (
