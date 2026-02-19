@@ -176,6 +176,13 @@ export default function Signup() {
                             Sign in
                         </Link>
                     </p>
+
+                    <p className="text-center mt-2 text-muted-foreground">
+                        Want to sell products?{' '}
+                        <Link to="/seller/signup" className="text-foreground font-medium hover:underline">
+                            Sign up as seller
+                        </Link>
+                    </p>
                 </div>
             </main>
 
