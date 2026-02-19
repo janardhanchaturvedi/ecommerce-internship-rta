@@ -9,7 +9,7 @@ import ProductDetailPage from './components/productDetail';
 import { UserContext } from './contexts/UserContext';
 import LoginPage from './components/login';
 import Signup from './components/signup';
-import AddProductPage from './components/addProduct';
+import SellerSignup from './components/sellerSignup';
 export default function App() {
   const [user, setUser] = useState(null);
   const router = createBrowserRouter([
@@ -34,8 +34,8 @@ export default function App() {
       element: <Signup />
     },
     {
-      path: "/add-product",
-      element: <AddProductPage />
+      path: "/seller/signup",
+      element: <SellerSignup />
     }
   ]);
   return (
