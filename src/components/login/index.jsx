@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 // import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -18,14 +20,20 @@ export default function Login() {
     const login = () => {
 
     }
+    const loginUserDetail = localStorage.getItem("user")
+    console.log("loginUserDetail", loginUserDetail)
     // const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
+    if (loginUserDetail) {
+        navigate("/seller/dashboard")
+    }
+
     const from = (location.state)?.from || '/dashboard';
 
     const handleSubmit = async (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         // setError('');
         // setIsLoading(true);
 
@@ -38,17 +46,40 @@ export default function Login() {
         // }
 
         // setIsLoading(false);
-        const registrationKaEmail = localStorage.getItem("email");
-        const registrationKaPassword = localStorage.getItem("password")
+        // const registrationKaEmail = localStorage.getItem("email");
+        // const registrationKaPassword = localStorage.getItem("password")
 
-        if (registrationKaEmail === email && password === registrationKaPassword) {
-            navigate("/dashboard")
+        // if (registrationKaEmail === email && password === registrationKaPassword) {
+        //     navigate("/dashboard")
+        // }
+
+        const data = {
+            email: email,
+            password: password
+        }
+        const response = await axios.post("http://localhost:3001/login", data)
+        console.log("response", response?.data)
+        if (response?.data?.success === true) {
+            toast.success(response?.data?.message)
+            const loggedInData = {
+                email: response?.data?.data?.email,
+                fullName: response?.data?.data?.fullName,
+                _id: response?.data?.data?._id
+            }
+            localStorage.setItem("user", JSON.stringify(loggedInData))
+            navigate("/seller/dashboard")
+        }
+    };
+    useEffect(() => {
+        if (loginUserDetail) {
+            navigate("/seller/dashboard")
         }
 
-    };
+    }, [loginUserDetail])
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
+            <Toaster />
             <Header />
 
             <main className="flex-1 flex items-center justify-center py-12 px-4">

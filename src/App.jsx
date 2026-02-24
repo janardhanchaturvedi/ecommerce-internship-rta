@@ -10,6 +10,7 @@ import { UserContext } from './contexts/UserContext';
 import LoginPage from './components/login';
 import Signup from './components/signup';
 import SellerSignup from './components/sellerSignup';
+import SellerDashboard from './components/seller-dashboard';
 export default function App() {
   const [user, setUser] = useState(null);
   const router = createBrowserRouter([
@@ -36,6 +37,10 @@ export default function App() {
     {
       path: "/seller/signup",
       element: <SellerSignup />
+    },
+    {
+      path: "/seller/dashboard",
+      element: <SellerDashboard />
     }
   ]);
   return (
