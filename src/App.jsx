@@ -11,6 +11,7 @@ import LoginPage from './components/login';
 import Signup from './components/signup';
 import SellerSignup from './components/sellerSignup';
 import SellerDashboard from './components/seller-dashboard';
+import SellerProductForm from './components/add-product';
 export default function App() {
   const [user, setUser] = useState(null);
   const router = createBrowserRouter([
@@ -41,6 +42,10 @@ export default function App() {
     {
       path: "/seller/dashboard",
       element: <SellerDashboard />
+    },
+    {
+      path: "/seller/product/new",
+      element: <SellerProductForm />
     }
   ]);
   return (
