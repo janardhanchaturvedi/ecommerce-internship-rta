@@ -6,13 +6,14 @@ import { Button } from './../../ui/button';
 export default function FeaturedProducts() {
     // Step : 4 Add the State to store the products
     const [products, setProducts] = useState([]);
+    console.log("products", products)
 
     //Step 1 : Create a function fetchProductData
     const fetchProductData = () => {
         // Step 2: Get the data from the fake store api
-        fetch('https://fakestoreapi.com/products?limit=4')
+        fetch('http://localhost:3001/products')
             .then(response => response.json())
-            .then(data => setProducts(data));
+            .then(data => setProducts(data?.data));
         //Step : 3 Set the data in the state
     }
 

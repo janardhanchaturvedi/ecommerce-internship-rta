@@ -12,6 +12,7 @@ import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, ImagePlus, Package, Loader2, Trash2 } from 'lucide-react';
 import { UserContext } from '@/contexts/UserContext';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const PRODUCT_CATEGORIES = ['Bags', 'Kitchen', 'Home', 'Office', 'Accessories'];
 
@@ -25,13 +26,46 @@ export default function SellerProductForm() {
 
     }
     const addProduct = async (productDetails) => {
+        console.log(productDetails)
+        //         {
+        //     "name": "SDASFSDFSDfdgdsfds",
+        //     "description": "dsfgdsf",
+        //     "price": 23453,
+        //     "originalPrice": 345234522.94,
+        //     "category": "Kitchen",
+        //     "images": [
+        //         "https://images.unsplash.com/photo-1770630927895-2057aa3a5673?q=80&w=1170&auto=format&fit=crop"
+        //     ],
+        //     "inStock": true
+        // }
+        const data = {
+            name: productDetails?.name,
+            price: productDetails?.price,
+            category: productDetails?.category,
+            description: productDetails?.description,
+            inStock: productDetails?.inStock,
+            image: productDetails?.images?.[0]
+        }
 
+        const response = await axios.post("http://localhost:3001/products", data)
+        console.log("response of the add proudcti", response)
+        if (response?.data?.sucess) {
+            toast.success(response?.data?.message ?? "Product Added")
+        }
 
     }
     const updateProduct = () => {
 
     }
-    const [form, setForm] = useState();
+    const [form, setForm] = useState({
+        name: '',
+        description: '',
+        price: '',
+        originalPrice: '',
+        category: '',
+        images: [''],
+        inStock: true,
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -140,6 +174,7 @@ export default function SellerProductForm() {
 
     return (
         <div className="min-h-screen flex flex-col bg-background">
+            <Toaster />
             <Header />
 
             <main className="flex-1 py-8 md:py-12">
