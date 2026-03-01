@@ -22,6 +22,8 @@ import {
 import { Plus, Package, Edit, Trash2, Store, DollarSign, Eye } from 'lucide-react';
 // import { toast } from '@/hooks/use-toast';
 import { UserContext } from '@/contexts/UserContext';
+import toast from 'react-hot-toast';
+import { formatPrice } from '@/lib/formatPrice';
 
 const PRODUCT_CATEGORIES = ['Bags', 'Kitchen', 'Home', 'Office', 'Accessories'];
 
@@ -31,6 +33,20 @@ export default function SellerDashboard() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [form, setForm] = useState();
+
+    const myProducts = [
+        {
+            id: 1,
+            name: 'Handcrafted Leather Wallet',
+            category: 'Bags',
+            price: 49.99,
+            originalPrice: 79.99,
+            inStock: true,
+            images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80'],
+        }
+    ];
+
+    const totalRevenue = myProducts.reduce((sum, p) => sum + p.price, 0);
 
     // if (isLoading) {
     //     return (
@@ -49,32 +65,32 @@ export default function SellerDashboard() {
     // const totalRevenue = myProducts.reduce((sum, p) => sum + p.price, 0);
 
     const handleOpenAdd = () => {
-        setForm(emptyForm);
-        setEditingId(null);
-        setDialogOpen(true);
+        // setForm(emptyForm);
+        // setEditingId(null);
+        // setDialogOpen(true);
     };
 
     const handleOpenEdit = (productId) => {
-        const product = myProducts.find(p => p.id === productId);
-        if (!product) return;
-        setForm({
-            name: product.name,
-            description: product.description,
-            price: String(product.price),
-            originalPrice: product.originalPrice ? String(product.originalPrice) : '',
-            category: product.category,
-            imageUrl: product.images[0] || '',
-            imageUrl2: product.images[1] || '',
-            inStock: product.inStock,
-        });
-        setEditingId(productId);
-        setDialogOpen(true);
+        // const product = myProducts.find(p => p.id === productId);
+        // if (!product) return;
+        // setForm({
+        //     name: product.name,
+        //     description: product.description,
+        //     price: String(product.price),
+        //     originalPrice: product.originalPrice ? String(product.originalPrice) : '',
+        //     category: product.category,
+        //     imageUrl: product.images[0] || '',
+        //     imageUrl2: product.images[1] || '',
+        //     inStock: product.inStock,
+        // });
+        // setEditingId(productId);
+        // setDialogOpen(true);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!form.name || !form.price || !form.category) {
-            toast({ title: 'Missing fields', description: 'Please fill in name, price, and category.', variant: 'destructive' });
+            toast.error('Please fill in name, price, and category.');
             return;
         }
 
@@ -94,21 +110,21 @@ export default function SellerDashboard() {
         };
 
         if (editingId) {
-            updateProduct(editingId, productData);
-            toast({ title: 'Product updated', description: `${form.name} has been updated.` });
+            // updateProduct(editingId, productData);
+            toast.success(`${form.name} has been updated.`);
         } else {
-            addProduct({ ...productData, sellerId: user.id });
-            toast({ title: 'Product added', description: `${form.name} has been listed.` });
+            // addProduct({ ...productData, sellerId: user.id });
+            toast.success(`${form.name} has been listed.`);
         }
 
         setDialogOpen(false);
-        setForm(emptyForm);
+        // setForm(emptyForm);
         setEditingId(null);
     };
 
     const handleDelete = (id, name) => {
-        deleteProduct(id);
-        toast({ title: 'Product deleted', description: `${name} has been removed.` });
+        // deleteProduct(id);
+        toast.success(`${name} has been removed.`);
     };
 
     return (
@@ -143,7 +159,7 @@ export default function SellerDashboard() {
                                     <Package className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{myProducts.length}</p>
+                                    <p className="text-2xl font-semibold">{myProducts?.length}</p>
                                     <p className="text-sm text-muted-foreground">Listed Products</p>
                                 </div>
                             </CardContent>
@@ -165,7 +181,7 @@ export default function SellerDashboard() {
                                     <Store className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{myProducts.filter(p => p.inStock).length}</p>
+                                    <p className="text-2xl font-semibold">{myProducts?.filter(p => p.inStock).length}</p>
                                     <p className="text-sm text-muted-foreground">In Stock</p>
                                 </div>
                             </CardContent>
@@ -266,7 +282,7 @@ export default function SellerDashboard() {
                             <Input
                                 id="product-name"
                                 placeholder="e.g. Handcrafted Leather Wallet"
-                                value={form.name}
+                                value={form?.name}
                                 onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))}
                                 required
                             />
@@ -277,7 +293,7 @@ export default function SellerDashboard() {
                             <Textarea
                                 id="product-desc"
                                 placeholder="Describe your product..."
-                                value={form.description}
+                                value={form?.description}
                                 onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))}
                                 rows={3}
                             />
@@ -292,7 +308,7 @@ export default function SellerDashboard() {
                                     min="0"
                                     step="0.01"
                                     placeholder="49.99"
-                                    value={form.price}
+                                    value={form?.price}
                                     onChange={(e) => setForm(f => ({ ...f, price: e.target.value }))}
                                     required
                                 />
@@ -305,7 +321,7 @@ export default function SellerDashboard() {
                                     min="0"
                                     step="0.01"
                                     placeholder="Optional"
-                                    value={form.originalPrice}
+                                    value={form?.originalPrice}
                                     onChange={(e) => setForm(f => ({ ...f, originalPrice: e.target.value }))}
                                 />
                             </div>
@@ -314,7 +330,7 @@ export default function SellerDashboard() {
                         <div className="space-y-2">
                             <Label htmlFor="product-category">Category *</Label>
                             <Select
-                                value={form.category}
+                                value={form?.category}
                                 onValueChange={(val) => setForm(f => ({ ...f, category: val }))}
                             >
                                 <SelectTrigger>
@@ -334,7 +350,7 @@ export default function SellerDashboard() {
                                 id="product-img1"
                                 type="url"
                                 placeholder="https://images.unsplash.com/..."
-                                value={form.imageUrl}
+                                value={form?.imageUrl}
                                 onChange={(e) => setForm(f => ({ ...f, imageUrl: e.target.value }))}
                             />
                         </div>
@@ -345,7 +361,7 @@ export default function SellerDashboard() {
                                 id="product-img2"
                                 type="url"
                                 placeholder="https://images.unsplash.com/..."
-                                value={form.imageUrl2}
+                                value={form?.imageUrl2}
                                 onChange={(e) => setForm(f => ({ ...f, imageUrl2: e.target.value }))}
                             />
                         </div>
@@ -354,7 +370,7 @@ export default function SellerDashboard() {
                             <input
                                 type="checkbox"
                                 id="product-stock"
-                                checked={form.inStock}
+                                checked={form?.inStock}
                                 onChange={(e) => setForm(f => ({ ...f, inStock: e.target.checked }))}
                                 className="rounded border-border"
                             />
