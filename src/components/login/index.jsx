@@ -67,7 +67,11 @@ export default function Login() {
                 _id: response?.data?.data?._id
             }
             localStorage.setItem("user", JSON.stringify(loggedInData))
-            navigate("/seller/dashboard")
+            if (response?.data?.data?.role === "SELLER") {
+                navigate("/seller/dashboard")
+            } else if (response?.data?.data?.role === "BUYER") {
+                navigate("/dashboard")
+            }
         }
     };
     useEffect(() => {
