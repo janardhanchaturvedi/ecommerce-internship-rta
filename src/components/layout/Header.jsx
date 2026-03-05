@@ -6,9 +6,10 @@ import { UserContext } from '@/contexts/UserContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 export default function Header() {
-    const user = useContext(UserContext);
+    const user = localStorage.getItem("user")
     const logout = () => {
-
+        localStorage.removeItem("user")
+        window.location.reload()
     }
     return (
         <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">

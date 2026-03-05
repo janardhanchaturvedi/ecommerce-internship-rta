@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { use, useContext, useEffect, useState } from 'react';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -24,16 +24,36 @@ import { Plus, Package, Edit, Trash2, Store, DollarSign, Eye } from 'lucide-reac
 import { UserContext } from '@/contexts/UserContext';
 import toast from 'react-hot-toast';
 import { formatPrice } from '@/lib/formatPrice';
+import axios from 'axios';
 
 const PRODUCT_CATEGORIES = ['Bags', 'Kitchen', 'Home', 'Office', 'Accessories'];
 
 export default function SellerDashboard() {
-    const user = useContext(UserContext);
+    const navigate = useNavigate();
     // const { getProductsBySeller, addProduct, updateProduct, deleteProduct } = useProducts();
+    const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [sellerStats, setSellerStats] = useState({});
     const [editingId, setEditingId] = useState(null);
     const [form, setForm] = useState();
+    const getSellerStats = async () => {
+        if (user) {
+            const response = await axios.get(`http://localhost:3001/seller-stats?sellerId=${user?._id}`)
+            console.log("seller stats response", response)
+            setSellerStats(response.data.data);
+        }
+    }
 
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/")
+        } else {
+            if (user) {
+                getSellerStats()
+            }
+        }
+    }, [])
     const myProducts = [
         {
             id: 1,
@@ -46,7 +66,6 @@ export default function SellerDashboard() {
         }
     ];
 
-    const totalRevenue = myProducts.reduce((sum, p) => sum + p.price, 0);
 
     // if (isLoading) {
     //     return (
@@ -159,7 +178,7 @@ export default function SellerDashboard() {
                                     <Package className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{myProducts?.length}</p>
+                                    <p className="text-2xl font-semibold">{sellerStats?.totalProducts}</p>
                                     <p className="text-sm text-muted-foreground">Listed Products</p>
                                 </div>
                             </CardContent>
@@ -170,7 +189,7 @@ export default function SellerDashboard() {
                                     <DollarSign className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{formatPrice(totalRevenue)}</p>
+                                    <p className="text-2xl font-semibold">{formatPrice(sellerStats?.totalRevenue)}</p>
                                     <p className="text-sm text-muted-foreground">Total Listing Value</p>
                                 </div>
                             </CardContent>
@@ -181,7 +200,7 @@ export default function SellerDashboard() {
                                     <Store className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{myProducts?.filter(p => p.inStock).length}</p>
+                                    <p className="text-2xl font-semibold">{sellerStats?.totalInStock}</p>
                                     <p className="text-sm text-muted-foreground">In Stock</p>
                                 </div>
                             </CardContent>

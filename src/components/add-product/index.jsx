@@ -26,7 +26,6 @@ export default function SellerProductForm() {
 
     }
     const addProduct = async (productDetails) => {
-        console.log(productDetails)
         //         {
         //     "name": "SDASFSDFSDfdgdsfds",
         //     "description": "dsfgdsf",
@@ -38,13 +37,20 @@ export default function SellerProductForm() {
         //     ],
         //     "inStock": true
         // }
+        const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+        // if (user.role !== "SELLER") {
+        //     toast.error("Only sellers can add products.");
+        //     return;
+        // }
+
         const data = {
             name: productDetails?.name,
             price: productDetails?.price,
             category: productDetails?.category,
             description: productDetails?.description,
             inStock: productDetails?.inStock,
-            image: productDetails?.images?.[0]
+            image: productDetails?.images?.[0],
+            sellerId: user?._id
         }
 
         const response = await axios.post("http://localhost:3001/products", data)
