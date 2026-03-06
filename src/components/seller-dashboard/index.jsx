@@ -36,14 +36,26 @@ export default function SellerDashboard() {
     const [sellerStats, setSellerStats] = useState({});
     const [editingId, setEditingId] = useState(null);
     const [form, setForm] = useState();
+    const [sellerProducts, setSellerProducts] = useState([]);
     const getSellerStats = async () => {
         if (user) {
             const response = await axios.get(`http://localhost:3001/seller-stats?sellerId=${user?._id}`)
             console.log("seller stats response", response)
-            setSellerStats(response.data.data);
+            setSellerStats(response?.data?.data);
         }
     }
 
+    const getSellerProducts = async () => {
+        if (user) {
+            try {
+                const response = await axios.get(`http://localhost:3001/seller-products?sellerId=${user._id}`);
+                setSellerProducts(response?.data?.data);
+            } catch (error) {
+                console.error("Error fetching seller products:", error);
+            }
+        }
+
+    }
 
     useEffect(() => {
         if (!user) {
@@ -51,6 +63,7 @@ export default function SellerDashboard() {
         } else {
             if (user) {
                 getSellerStats()
+                getSellerProducts()
             }
         }
     }, [])
@@ -142,7 +155,8 @@ export default function SellerDashboard() {
     };
 
     const handleDelete = (id, name) => {
-        // deleteProduct(id);
+        const response = axios.delete(`http://localhost:3001/products/${id}`)
+        getSellerProducts();
         toast.success(`${name} has been removed.`);
     };
 
@@ -178,7 +192,7 @@ export default function SellerDashboard() {
                                     <Package className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{sellerStats?.totalProducts}</p>
+                                    <p className="text-2xl font-semibold">{sellerStats?.totalProducts ?? 0}</p>
                                     <p className="text-sm text-muted-foreground">Listed Products</p>
                                 </div>
                             </CardContent>
@@ -189,7 +203,7 @@ export default function SellerDashboard() {
                                     <DollarSign className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{formatPrice(sellerStats?.totalRevenue)}</p>
+                                    <p className="text-2xl font-semibold">{formatPrice(sellerStats?.totalRevenue ?? 0)}</p>
                                     <p className="text-sm text-muted-foreground">Total Listing Value</p>
                                 </div>
                             </CardContent>
@@ -200,7 +214,7 @@ export default function SellerDashboard() {
                                     <Store className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{sellerStats?.totalInStock}</p>
+                                    <p className="text-2xl font-semibold">{sellerStats?.totalInStock ?? 0}</p>
                                     <p className="text-sm text-muted-foreground">In Stock</p>
                                 </div>
                             </CardContent>
@@ -214,17 +228,17 @@ export default function SellerDashboard() {
                             <CardDescription>Manage your listed products</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {myProducts.length > 0 ? (
+                            {sellerProducts?.length > 0 ? (
                                 <div className="space-y-4">
-                                    {myProducts.map((product) => (
+                                    {sellerProducts.map((product) => (
                                         <div
                                             key={product.id}
                                             className="flex items-center gap-4 p-4 border border-border rounded-lg"
                                         >
                                             <div className="h-16 w-16 rounded-md bg-secondary overflow-hidden flex-shrink-0">
                                                 <img
-                                                    src={product.images[0]}
-                                                    alt={product.name}
+                                                    src={product?.image}
+                                                    alt={product?.name}
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
@@ -242,7 +256,7 @@ export default function SellerDashboard() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-2 flex-shrink-0">
-                                                <Button
+                                                {/* <Button
                                                     variant="ghost"
                                                     size="icon"
                                                     asChild
@@ -259,12 +273,12 @@ export default function SellerDashboard() {
                                                     <Link to={`/seller/product/edit/${product.id}`}>
                                                         <Edit className="h-4 w-4" />
                                                     </Link>
-                                                </Button>
+                                                </Button> */}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
                                                     className="text-destructive hover:text-destructive"
-                                                    onClick={() => handleDelete(product.id, product.name)}
+                                                    onClick={() => handleDelete(product?._id, product.name)}
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>

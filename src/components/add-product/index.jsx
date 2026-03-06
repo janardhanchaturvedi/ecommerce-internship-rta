@@ -169,11 +169,12 @@ export default function SellerProductForm() {
             // toast({ title: 'Product updated', description: `${form.name} has been updated successfully.` });
         } else {
             addProduct({ ...productData });
+
             // toast({ title: 'Product listed!', description: `${form.name} is now live in the store.` });
         }
 
         setIsSubmitting(false);
-        // navigate('/seller/dashboard');
+        navigate('/seller/dashboard');
     };
 
     const previewImages = form?.images?.filter(img => img.trim() !== '');
