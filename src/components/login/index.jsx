@@ -64,12 +64,15 @@ export default function Login() {
             const loggedInData = {
                 email: response?.data?.data?.email,
                 fullName: response?.data?.data?.fullName,
+                role: response?.data?.data?.role,
                 _id: response?.data?.data?._id
             }
             localStorage.setItem("user", JSON.stringify(loggedInData))
             if (response?.data?.data?.role === "SELLER") {
                 navigate("/seller/dashboard")
             } else if (response?.data?.data?.role === "BUYER") {
+                navigate("/dashboard")
+            } else {
                 navigate("/dashboard")
             }
         }

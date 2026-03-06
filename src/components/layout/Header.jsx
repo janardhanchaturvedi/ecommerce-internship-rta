@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 
 export default function Header() {
     const user = localStorage.getItem("user")
+    const parsedUser = user ? JSON.parse(user) : null
     const logout = () => {
         localStorage.removeItem("user")
         window.location.reload()
@@ -59,12 +60,14 @@ export default function Header() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-48">
                                     <div className="px-2 py-1.5">
-                                        <p className="text-sm font-medium">{user.name}</p>
-                                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                                        <p className="text-sm font-medium">{parsedUser.name}</p>
+                                        <p className="text-xs text-muted-foreground">{parsedUser.email}</p>
                                     </div>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem asChild>
-                                        <Link to="/dashboard" className="cursor-pointer">Dashboard</Link>
+                                        <Link to={parsedUser.role === 'SELLER' ? '/seller/dashboard' : '/dashboard'} className="cursor-pointer">
+                                            Dashboard
+                                        </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive">
