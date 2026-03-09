@@ -20,7 +20,8 @@ const ProductDetailPage = () => {
     const getProductById = () => {
         fetch(`http://localhost:3001/products/${id}`)
             .then(response => response.json())
-            .then(data => setProductDetails(data));
+            .then(data => setProductDetails(data?.data))
+            .catch(error => console.log('Error fetching product details:', error));
     }
     useEffect(() => {
         getProductById(id)
