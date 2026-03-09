@@ -12,12 +12,13 @@ const ProductDetailPage = () => {
     const [productDetails, setProductDetails] = useState();
     const user = useContext(UserContext);
     console.log("user 1111", user)
+    console.log("id ", id)
     console.log("productDetails ", productDetails)
 
     const navigate = useNavigate();
     // const { addItem } = useCart();
     const getProductById = () => {
-        fetch(`https://fakestoreapi.com/products/${id}`)
+        fetch(`http://localhost:3001/products/${id}`)
             .then(response => response.json())
             .then(data => setProductDetails(data));
     }

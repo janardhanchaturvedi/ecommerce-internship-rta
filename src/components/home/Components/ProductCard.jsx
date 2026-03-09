@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 export function ProductCard({ product }) {
+    console.log("product in card", product)
     return (
         <Link
-            to={`/product/${product.id}`}
+            to={`/product/${product._id}`}
             className="group block animate-fade-in"
         >
             <div className="relative aspect-[4/5] overflow-hidden bg-secondary mb-4">
