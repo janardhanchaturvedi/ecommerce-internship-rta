@@ -5,12 +5,14 @@ import Footer from '../layout/Footer';
 import { UserContext } from './../../contexts/UserContext';
 import { ChevronLeft, Minus, Plus } from 'lucide-react';
 import { Button } from '../ui/button';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const ProductDetailPage = () => {
     const { id } = useParams();
     const [productDetails, setProductDetails] = useState();
     const user = useContext(UserContext);
+    const existingCartProducts = JSON.parse(localStorage.getItem('cart'))?.items || [];
     console.log("user 1111", user)
     console.log("id ", id)
     console.log("productDetails ", productDetails)
@@ -31,13 +33,27 @@ const ProductDetailPage = () => {
     const [selectedVariants, setSelectedVariants] = useState({});
     const [selectedImage, setSelectedImage] = useState(0);
 
-    const handleAddToCart = () => {
-
+    const handleAddToCart = (productDetails) => {
+        console.log("Adding to cart: ", productDetails)
+        const cartProducts = existingCartProducts?.filter(item => item.productId === productDetails?.id)
+        const cartData = {
+            userId: user?.id,
+            items: [{
+                productId: productDetails?.id,
+                ...productDetails,
+                quantity: quantity,
+            },
+            ...cartProducts
+            ]
+        }
+        localStorage.setItem('cart', JSON.stringify(cartData));
+        toast.success('Product added to cart!');
     }
 
 
     return (
         <div className="min-h-screen flex flex-col">
+            <Toaster />
             <Header />
 
             <main className="flex-1">
@@ -153,7 +169,7 @@ const ProductDetailPage = () => {
                                 <Button
                                     size="lg"
                                     className="flex-1"
-                                    onClick={handleAddToCart}
+                                    onClick={() => handleAddToCart(productDetails)}
                                 >
                                     {'Add to Cart'}
                                 </Button>
