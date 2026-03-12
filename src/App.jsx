@@ -13,6 +13,8 @@ import SellerSignup from './components/sellerSignup';
 import SellerDashboard from './components/seller-dashboard';
 import SellerProductForm from './components/add-product';
 import Dashboard from './components/user-dashboard';
+import { CartProvider } from './contexts/CartContext';
+import { CartDrawer } from './components/cart/CartDrawer';
 export default function App() {
   const [user, setUser] = useState(null);
   const router = createBrowserRouter([
@@ -55,8 +57,10 @@ export default function App() {
     }
   ]);
   return (
-    <UserContext.Provider value={user}>
-      <RouterProvider router={router} />
-    </UserContext.Provider>
+    <CartProvider>
+      <UserContext.Provider value={user}>
+        <RouterProvider router={router} />
+      </UserContext.Provider>
+    </CartProvider>
   )
 }
