@@ -5,9 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Package, Heart, Settings, LogOut, ShoppingBag, User, MapPin, CreditCard } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Dashboard() {
     const user = JSON.parse(localStorage.getItem('user'));
+    const [stats, setStats] = useState(null);
+    console.log("stats", stats);
 
     const logout = () => {
         localStorage.removeItem('user');
@@ -39,6 +43,20 @@ export default function Dashboard() {
         },
     ];
 
+    const getstatsandorders = async () => {
+        // Fetch order history and stats from API
+        const response = await axios.get(`http://localhost:3001/buyer-stats/${user._id}`);
+
+        console.log("response", response);
+        if (response?.data?.success) {
+            // Update state with fetched data
+            setStats(response.data);
+        }
+    }
+
+    useEffect(() => {
+        getstatsandorders();
+    }, []);
     return (
         <div className="min-h-screen flex flex-col bg-background">
             <Header />
@@ -63,7 +81,7 @@ export default function Dashboard() {
                                     <Package className="h-6 w-6 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-2xl font-semibold">{orders.length}</p>
+                                    <p className="text-2xl font-semibold">{stats?.count || 0}</p>
                                     <p className="text-sm text-muted-foreground">Total Orders</p>
                                 </div>
                             </CardContent>
@@ -116,11 +134,11 @@ export default function Dashboard() {
                                     <CardDescription>Track and manage your orders</CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    {orders.length > 0 ? (
+                                    {stats?.data?.length > 0 ? (
                                         <div className="space-y-4">
-                                            {orders.map((order) => (
+                                            {stats?.data?.map((order) => (
                                                 <div
-                                                    key={order.id}
+                                                    key={order._id}
                                                     className="flex items-center justify-between p-4 border border-border rounded-lg"
                                                 >
                                                     <div className="flex items-center gap-4">
@@ -128,14 +146,14 @@ export default function Dashboard() {
                                                             <Package className="h-5 w-5 text-muted-foreground" />
                                                         </div>
                                                         <div>
-                                                            <p className="font-medium">{order.id}</p>
+                                                            <p className="font-medium">{order._id}</p>
                                                             <p className="text-sm text-muted-foreground">
-                                                                {new Date(order.date).toLocaleDateString()} • {order.items} item{order.items > 1 ? 's' : ''}
+                                                                {new Date(order.createdAt).toLocaleDateString()} • {order.products.length} item{order.products.length > 1 ? 's' : ''}
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="font-medium">${order.total.toFixed(2)}</p>
+                                                        <p className="font-medium">${order?.total?.toFixed(2)}</p>
                                                         <p className={`text-sm ${order.status === 'Delivered'
                                                             ? 'text-green-600'
                                                             : 'text-amber-600'

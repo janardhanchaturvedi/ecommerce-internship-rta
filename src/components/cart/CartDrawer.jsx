@@ -23,12 +23,13 @@ export function CartDrawer() {
     }
     const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0);
     const navigate = useNavigate();
+
+    if (!isOpen) return null;
     if (!parsedUser) {
-        setCartOpen(false);
+        // setCartOpen(false);
         navigate('/login');
     }
 
-    if (!isOpen) return null;
 
     // const handleCheckout = () => {
     //     setCartOpen(false);
@@ -47,7 +48,8 @@ export function CartDrawer() {
             toast.success("Order placed successfully!");
             clearCart();
             setCartOpen(false);
-            navigate('/dashboard');
+            window.location.href = '/dashboard';
+            // navigate('/dashboard');
         } else {
             toast.error("Something went wrong")
         }
